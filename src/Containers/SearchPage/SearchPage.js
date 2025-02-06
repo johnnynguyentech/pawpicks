@@ -112,7 +112,7 @@ function SearchPage() {
       alert("Please select at least one favorite dog to generate a match.");
       return;
     }
-
+  
     try {
       const response = await fetch(`${API_BASE_URL}/dogs/match`, {
         method: "POST",
@@ -120,29 +120,49 @@ function SearchPage() {
         credentials: "include",
         body: JSON.stringify(favorites),
       });
-
-      if (response.ok) {
-        const matchedDogId = await response.json();
-        console.log("Matched Dog ID:", matchedDogId);
-
-        
-        const matchedDog = dogs.find((dog) => dog.id === matchedDogId.match);
-
-        if (matchedDog) {
-          setMatchedDog(matchedDog);
-          setShowModal(true);
-        } else {
-          alert("Match found, but details are unavailable.");
-        }
-      } else {
+  
+      if (!response.ok) {
         console.error("Failed to generate match:", response.status, response.statusText);
         alert("Error generating match. Please try again.");
+        return;
+      }
+  
+      const matchedDogId = await response.json();
+      console.log("Matched Dog ID:", matchedDogId);
+  
+      let matchedDog = dogs.find((dog) => dog.id === matchedDogId.match);
+  
+      if (!matchedDog) {
+        // Fetch the matched dog's details if it's not in `dogs` state
+        const detailsResponse = await fetch(`${API_BASE_URL}/dogs`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify([matchedDogId.match]), // Send an array with the matched dog ID
+        });
+  
+        if (!detailsResponse.ok) {
+          console.error("Failed to fetch matched dog details");
+          alert("Match found, but details are unavailable.");
+          return;
+        }
+  
+        const dogDetails = await detailsResponse.json();
+        matchedDog = dogDetails[0]; // Assuming API returns an array of dog objects
+      }
+  
+      if (matchedDog) {
+        setMatchedDog(matchedDog);
+        setShowModal(true);
+      } else {
+        alert("Match found, but details are unavailable.");
       }
     } catch (error) {
       console.error("Error generating match:", error);
       alert("Error generating match. Please try again.");
     }
   };
+  
 
   return (
     <div className="SearchPage">
