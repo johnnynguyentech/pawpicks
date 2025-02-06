@@ -23,4 +23,3 @@ function AuthProvider({ children }) {
 
 // Export AuthContext as named export and AuthProvider as named export
 export { AuthContext, AuthProvider };
-

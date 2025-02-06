@@ -34,12 +34,13 @@ function Login() {
     });
 
     if (response.ok) {
-      setAuthToken(true); 
-      navigate('/search'); 
+        setAuthToken(true); 
+        navigate('/search'); 
     } else {
-      setError('Login failed. Please try again.');
+        setError('Login failed. Please try again.');
     }
   };
+  
 
   return (
     <div className="Login">
