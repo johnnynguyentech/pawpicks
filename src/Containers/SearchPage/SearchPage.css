@@ -286,10 +286,6 @@ button:disabled {
         grid-template-columns: 1fr;
     }
   
-    .pagination {
-        flex-direction: column;
-    }
-  
     .match-button {
         font-size: 1.1rem;
     }

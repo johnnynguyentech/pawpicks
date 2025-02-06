@@ -205,10 +205,6 @@ function SearchPage() {
         </button>
       </div>
 
-      <button className="match-button" onClick={generateMatch}>
-        Find Your Match
-      </button>
-
       {showModal && matchedDog && (
         <div className="modal show" tabIndex="-1" style={{ display: "block" }}>
           <div className="modal-dialog">
